@@ -1,0 +1,90 @@
+#include <stdio.h>
+
+// Function prototypes
+void processTransaction(float *ttlsales, int *ttlitem, int *ttltran);
+
+
+int main() {
+    int option, ttlitem = 0, ttltran = 0;
+    float ttlsales = 0;
+    char repeat;
+
+    do {
+        printf("--------------------------------\n");
+        printf("        MENU OPTIONS\n");
+        printf("--------------------------------\n");
+        printf("1. Buy Products\n");
+        printf("2. View All Sales Report\n");
+        printf("Choose an option: ");
+        scanf("%d", &option);
+
+        if (option == 1) {
+            processTransaction(&ttlsales, &ttlitem, &ttltran);
+        } else if (option == 2) {	
+            printf("--------------------------------------\n");
+            printf("           SALES REPORT\n");
+            printf("--------------------------------------\n");
+            printf("| No of Transactions  | Items Sold     |\n");
+            printf("| %d                   | %d             |\n", ttltran, ttlitem);
+            printf("--------------------------------------\n");
+            printf("Total Sales: %.2f\n", ttlsales);
+            printf("--------------------------------------\n");
+        } else {
+            printf("Invalid option. Please try again.\n");
+        }
+
+        printf("\nDo you want to perform another transaction? (y/n): ");
+        scanf(" %c", &repeat);
+    } while (repeat == 'y');
+
+    return 0;
+}
+
+// Process the transaction (buy products)
+void processTransaction(float *ttlsales, int *ttlitem, int *ttltran) {
+    int numproducts, price, quantity, cash;
+    float ttlpro = 0, due;
+    char name[50];
+
+    printf("\nEnter number of Products: ");
+    scanf("%d", &numproducts);
+
+    	for (int x = 1; x <= numproducts; x++) {
+        printf("\n--------------------------------");
+        printf("\nDetails of Product %d", x);
+        printf("\n--------------------------------");
+        printf("\nName: ");
+        scanf("%s", name);
+        printf("Price: ");
+        scanf("%d", &price);
+        printf("Quantity: ");
+        scanf("%d", &quantity);
+        due = price * quantity;
+        ttlpro += due;
+        *ttlitem += quantity;
+        printf("\n--------------------------------");
+        printf("\nDue for %s: %.2f", name, due);
+        printf("\n--------------------------------\n");
+    }
+
+    printf("\n--------------------------------\n");
+    printf("Total Due for all products: %.2f", ttlpro);
+    printf("\n--------------------------------");
+
+    printf("\nEnter Cash: ");
+    scanf("%d", &cash);
+
+    while (cash < ttlpro) {
+        printf("Insufficient cash, try again.\n");
+        printf("Enter Cash: ");
+        scanf("%d", &cash);
+    }
+
+    printf("\n--------------------------------");
+    printf("\nChange: %.2f", calculateChange(ttlpro, cash));
+    printf("\n--------------------------------\n");
+
+    *ttlsales += ttlpro;
+    (*ttltran)++;
+}
+
